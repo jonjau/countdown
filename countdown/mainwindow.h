@@ -7,12 +7,7 @@
 #include <QProcess>
 #include <QSettings>
 #include <QFileDialog>
-// this might be redundant
-#include <QFileInfo>
 
-#include <QDebug>
-
-//#include "timer.h"
 #include "pausabletimer.h"
 
 namespace Ui {
@@ -44,10 +39,6 @@ private:
     QString settingsFile;
 
     PausableTimer* timer;
-    // total seconds in most recent countdown, used to resume countdown.
-    //int tempTotalSeconds;
-    // previous progress
-    //int tempSecondsLeft;
 
     QString osName();
     void loadSettings();

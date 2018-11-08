@@ -4,24 +4,24 @@ PausableTimer::PausableTimer(int maxSeconds, QObject *parent) :
     QObject(parent),
     timer(new QTimer{}),
     maxSeconds_(maxSeconds),
+    tempSecondsElapsed_(0),
     countdownTime_(maxSeconds),
-    secondsElapsed_(0),
-    tempSecondsElapsed_(0)
+    secondsElapsed_(0)
 {
-    qDebug() << timer->isActive();
     connect(timer, SIGNAL(timeout()), this, SLOT(tick()));
 }
 
 void PausableTimer::tick()
 {
-    qDebug() << secondsElapsed_ << "seconds elapsed.";
     secondsElapsed_  += 1;
+    debugStatus("--tick--");
     if(secondsElapsed_ >= countdownTime_) {
         emit finish();
         timer->stop();
         return;
     }
     else {
+        // this is absolute progress
         emit update(tempSecondsElapsed_ + secondsElapsed_, maxSeconds_);
     }
 }
@@ -70,7 +70,7 @@ bool PausableTimer::isActive()
 
 void PausableTimer::debugStatus(QString event)
 {
-    qDebug() << event << isActive()
+    qDebug() << event << "\t" << isActive()
              << " progress: " << tempSecondsElapsed_ << " of " << maxSeconds_
              << " countdown: " << secondsElapsed_ << " of " << countdownTime_;
 }

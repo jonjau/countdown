@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     settingsFile = QApplication::applicationDirPath() + "/more/settings.ini";
     loadSettings();
-    qDebug() << "settings:" << settingsFile;
+    ui->statusBar->showMessage("loaded filepath from " + settingsFile);
 }
 
 MainWindow::~MainWindow()
@@ -30,7 +30,6 @@ void MainWindow::loadSettings()
     // QSettings::IniFormat is file-based, unlike NativeFormat
     QSettings settings(settingsFile, QSettings::IniFormat);
     QString filepath = settings.value("filepath","").toString();
-    qDebug() << filepath;
     ui->fileLineEdit->setText(filepath);
 }
 
@@ -43,10 +42,7 @@ void MainWindow::saveSettings()
 
 void MainWindow::on_browsePushButton_clicked()
 {
-    qDebug() << timer->maxSeconds() << timer->countdownTime() << timer->secondsElapsed();
-
     QUrl url = QFileDialog::getOpenFileUrl(this);
-    qDebug() << url;
     ui->fileLineEdit->setText(url.toString());
 }
 
@@ -105,9 +101,8 @@ void MainWindow::on_timerFinished()
         return;
     }
 
-    QString os = osName();
-    qDebug() << os;
-
+    // no cross-platform for now
+    //QString os = osName();
     QString command( "powershell.exe" );
     QString filepath = QString("\"%1\"").arg(ui->fileLineEdit->text());
 
@@ -116,15 +111,14 @@ void MainWindow::on_timerFinished()
 
     //qDebug() << command << params;
 
+    // these don't work
     //bool exists = QFileInfo(filepath).isDir() || QFileInfo(filepath).isFile();
     //bool exists = QFileInfo(QDir::toNativeSeparators(filepath)).isDir();
     //bool exists = QFileInfo::exists(filepath);
-    auto exists = QFileInfo(filepath);
+    //auto exists = QFileInfo(filepath);
+    //qDebug() << "exists: " << exists;
 
-    qDebug() << "exists: " << exists;
-    bool success = QProcess::startDetached(command, params);
-    qDebug() << "succ: " << success;
-
+    QProcess::startDetached(command, params);
 }
 
 int MainWindow::timeInSeconds(int hours, int minutes, int seconds)

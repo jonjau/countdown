@@ -27,12 +27,10 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    timer.cpp \
     pausabletimer.cpp
 
 HEADERS += \
         mainwindow.h \
-    timer.h \
     pausabletimer.h
 
 FORMS += \
