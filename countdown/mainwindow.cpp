@@ -66,63 +66,30 @@ void MainWindow::on_startPushButton_clicked()
     }
 
     if(timer->isActive()) {
-        qDebug() << "restarting";
-        ui->statusBar->showMessage("restarting.");
+        ui->statusBar->showMessage("--RESTARTED--");
         timer->stop();
     }
-
     timer->setMaxSeconds(totalSeconds);
     timer->start();
-
+    ui->statusBar->showMessage("--STARTED--");
 }
 
 void MainWindow::on_stopPushButton_clicked()
 {
     timer->stop();
-
-
-    //timer->stop();
-    //tempSecondsLeft = 0;
-    //tempTotalSeconds = 0;
-    //
-    //ui->hoursSpinBox->setValue(0);
-    //ui->minutesSpinBox->setValue(0);
-    //ui->secondsSpinBox->setValue(0);
-
+    ui->statusBar->showMessage("--STOPPED--");
     ui->progressBar->setValue(0);
 }
 
 void MainWindow::on_pausePushButton_clicked()
 {
-    //if (timer->isActive()) {
-    //    timer->stop();
-    //    tempSecondsLeft = timer->secondsLeft();
-    //    tempTotalSeconds = timer->countdownTime();
-    //
-    //    qDebug() << "paused" << tempSecondsLeft << " of " << tempTotalSeconds;
-    //    ui->statusBar->showMessage("--PAUSE-- : Timer paused.");
-    //}
-    //else {
-    //    ui->statusBar->showMessage("--ERROR-- : Timer is not active.");
-    //}
-
     timer->pause();
+        ui->statusBar->showMessage("--PAUSED--");
 }
 
 
 void MainWindow::on_timerUpdate(int currentSeconds, int maxSeconds)
 {
-    //if(timer->isActive()) {
-    //    if (tempSecondsLeft != 0 && tempTotalSeconds != 0) {
-    //        qDebug() << "hello";
-    //    }
-    //
-    //    ui->progressBar->setValue(timer->countdownTime() - timer->secondsLeft());
-    //    ui->statusBar->showMessage(QString(secondsInTimeString(timer->secondsLeft())) + " remaining");
-    //}
-    //else {
-    //    ui->progressBar->setValue(timer->countdownTime());
-    //}
     ui->progressBar->setMaximum(maxSeconds);
     ui->progressBar->setValue(currentSeconds);
     ui->statusBar->showMessage(QString(secondsInTimeString(maxSeconds - currentSeconds)) + " remaining");
@@ -135,18 +102,29 @@ void MainWindow::on_timerFinished()
 
     if (ui->fileLineEdit->text() == "") {
         ui->statusBar->showMessage("--DONE-- : No file path to be opened.");
+        return;
     }
-    else {
-        QString command( "powershell.exe" );
-        QString filepath = QString("\"%1\"").arg(ui->fileLineEdit->text());
 
-        ui->statusBar->showMessage("--DONE-- : Opening " + filepath + " ...");
-        QStringList params = QStringList() << "Start-Process" << "-FilePath" << filepath;
+    QString os = osName();
+    qDebug() << os;
 
-        //qDebug() << command << params;
+    QString command( "powershell.exe" );
+    QString filepath = QString("\"%1\"").arg(ui->fileLineEdit->text());
 
-        QProcess::startDetached(command, params);
-    }
+    ui->statusBar->showMessage("--DONE-- : Opening " + filepath + " ...");
+    QStringList params = QStringList() << "Start-Process" << "-FilePath" << filepath;
+
+    //qDebug() << command << params;
+
+    //bool exists = QFileInfo(filepath).isDir() || QFileInfo(filepath).isFile();
+    //bool exists = QFileInfo(QDir::toNativeSeparators(filepath)).isDir();
+    //bool exists = QFileInfo::exists(filepath);
+    auto exists = QFileInfo(filepath);
+
+    qDebug() << "exists: " << exists;
+    bool success = QProcess::startDetached(command, params);
+    qDebug() << "succ: " << success;
+
 }
 
 int MainWindow::timeInSeconds(int hours, int minutes, int seconds)
@@ -173,3 +151,17 @@ QString MainWindow::secondsInTimeString(int totalSeconds)
     return time_str;
 }
 
+QString MainWindow::osName()
+{
+    #if defined(Q_OS_WIN)
+    return QLatin1String("windows");
+    #elif defined(Q_OS_MACOS)
+    return QLatin1String("macos");
+    #elif defined(Q_OS_LINUX)
+    return QLatin1String("linux");
+    #elif defined(Q_OS_UNIX)
+    return QLatin1String("unix");
+    #else
+    return QLatin1String("unknown");
+    #endif
+}

@@ -7,7 +7,8 @@
 #include <QProcess>
 #include <QSettings>
 #include <QFileDialog>
-
+// this might be redundant
+#include <QFileInfo>
 
 #include <QDebug>
 
@@ -48,8 +49,10 @@ private:
     // previous progress
     //int tempSecondsLeft;
 
+    QString osName();
     void loadSettings();
     void saveSettings();
+
     int timeInSeconds(int hours, int minutes, int seconds);
     QString secondsInTimeString(int seconds);
 };
