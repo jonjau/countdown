@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer, SIGNAL(update(int, int)), this, SLOT(on_timerUpdate(int, int)));
     connect(timer, SIGNAL(finish()), this, SLOT(on_timerFinished()));
 
-    settingsFile = QApplication::applicationDirPath() + "/more/settings.ini";
+    settingsFile = QApplication::applicationDirPath() + "/settings.ini";
     loadSettings();
     ui->statusBar->showMessage("loaded filepath from " + settingsFile);
 }
