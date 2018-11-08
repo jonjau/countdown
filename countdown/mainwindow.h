@@ -9,9 +9,10 @@
 #include <QFileDialog>
 
 
-//#include <QDebug>
+#include <QDebug>
 
-#include "timer.h"
+//#include "timer.h"
+#include "pausabletimer.h"
 
 namespace Ui {
 class MainWindow;
@@ -28,8 +29,8 @@ public:
 signals:
     void stop();
 
-private slots:
-    void on_timerUpdate();
+public slots:
+    void on_timerUpdate(int, int);
     void on_timerFinished();
 
     void on_browsePushButton_clicked();
@@ -41,11 +42,11 @@ private:
     Ui::MainWindow *ui;
     QString settingsFile;
 
-    Timer* timer;
+    PausableTimer* timer;
     // total seconds in most recent countdown, used to resume countdown.
-    int tempTotalSeconds;
+    //int tempTotalSeconds;
     // previous progress
-    int tempSecondsLeft;
+    //int tempSecondsLeft;
 
     void loadSettings();
     void saveSettings();

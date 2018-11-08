@@ -25,9 +25,14 @@ public slots:
     void tick();
 
 private:
-
     int countdownTime_;
     int secondsLeft_;
+
+    // total seconds in most recent countdown, used to resume countdown.
+    int tempTotalSeconds;
+    // previous progress
+    int tempSecondsLeft;
 };
+
 
 #endif // TIMER_H
