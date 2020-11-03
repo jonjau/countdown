@@ -1,5 +1,5 @@
-*pro.user
+*/*.pro.user*
 
 build*/
-*.png
+#*.png
 *.rar
